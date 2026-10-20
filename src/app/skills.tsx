@@ -9,15 +9,15 @@ import { MaxContentWidth, Spacing } from '@/constants/theme';
 
 export interface Skill {
   id: number
+  link: string
   name: string
   typeId: number
-  link: string
 }
 
 export interface SkillType {
+  description: string
   id: number
   title: string
-  description: string
 }
 
 export default function Skills() {
@@ -28,9 +28,9 @@ export default function Skills() {
   const [error, setError] = useState('');
 
   const BASE_URL = Platform.select({
-    ios: 'http://localhost:3001',
-    android: 'http://10.0.2.2:3001',
-    default: 'http://localhost:3001',
+    android: process.env.EXPO_PUBLIC_BASE_URL_ANDROID,
+    ios: process.env.EXPO_PUBLIC_BASE_URL_IOS,
+    default: process.env.EXPO_PUBLIC_BASE_URL_WEB,
   });
 
   useEffect(() => {
