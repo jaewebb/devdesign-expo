@@ -6,11 +6,12 @@ import { useTheme } from '@/hooks/use-theme';
 export type ThemedViewProps = ViewProps & {
   lightColor?: string;
   darkColor?: string;
+  border?: ThemeColor;
   type?: ThemeColor;
 };
 
-export function ThemedView({ style, lightColor, darkColor, type, ...otherProps }: ThemedViewProps) {
+export function ThemedView({ style, lightColor, darkColor, border, type, ...otherProps }: ThemedViewProps) {
   const theme = useTheme();
 
-  return <View style={[{ backgroundColor: theme[type ?? 'background'] }, style]} {...otherProps} />;
+  return <View style={[{ backgroundColor: theme[type ?? 'background'], borderColor: theme[border ?? 'background'], borderWidth: border ? 1 : 0 }, style]} {...otherProps} />;
 }
