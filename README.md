@@ -2,9 +2,11 @@
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-<img width="1038" height="1071" alt="image" src="https://github.com/user-attachments/assets/10928d76-2664-460c-ba24-0a9e55b9f8b1" />
-<img width="1017" height="1051" alt="image" src="https://github.com/user-attachments/assets/4d31fbf0-1a82-4a7e-88cb-e72deffa0aee" />
-<img width="1008" height="1040" alt="image" src="https://github.com/user-attachments/assets/90f44b6b-d2b6-4d89-b0e8-9b0cf260681e" />
+## Screenshots of android and iOS emulators
+<img width="974" height="995" alt="image" src="https://github.com/user-attachments/assets/ad23cbe1-ee68-4d83-a427-cffb4e756466" />
+<img width="976" height="1007" alt="image" src="https://github.com/user-attachments/assets/339876e6-f494-4289-a35a-824c4a6bd50b" />
+<img width="978" height="996" alt="image" src="https://github.com/user-attachments/assets/d7c742fc-4875-44c4-92ae-1bc48ce3e90a" />
+
 
 ## Get started
 
