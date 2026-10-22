@@ -7,9 +7,9 @@ import {
   TabListProps,
 } from 'expo-router/ui';
 import { Image } from 'expo-image';
-import { Pressable, useColorScheme, View, StyleSheet } from 'react-native';
+import { Pressable, View, StyleSheet } from 'react-native';
 
-import { Colors, MaxContentWidth, Spacing } from '@/constants/theme';
+import { Spacing } from '@/constants/theme';
 
 import { ThemedText } from './themed-text';
 import { ThemedView } from './themed-view';
@@ -53,7 +53,7 @@ export function CustomTabList(props: TabListProps) {
   return (
     <View {...props} style={styles.tabListContainer}>
       <ThemedView style={styles.innerContainer}>
-        <Image style={styles.logo} source={require('@/assets/images/logo.png')} />
+        <Image style={styles.logo} source={require('@/assets/images/logo.png')} accessibilityLabel="Jae Webb's Logo" />
 
         {props.children}
       </ThemedView>

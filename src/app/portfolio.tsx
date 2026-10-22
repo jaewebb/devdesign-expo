@@ -1,14 +1,24 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { Platform, Pressable, StyleSheet } from 'react-native';
+
+import type { Metadata } from 'expo-router/server';
 
 import { ExternalLink } from '@/components/external-link';
 import { ThemedScrollView } from '@/components/themed-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+
 import { MaxContentWidth, Spacing } from '@/constants/theme';
 
-export default function TabTwoScreen() {
+export function generateMetadata(): Metadata {
+  return {
+    title: 'Portfolio',
+    description: 'A portfolio page with links to various web app examples as well as a link to my GitHub page.',
+  };
+}
+
+export default function Portfolio() {
   return (
-    <ThemedScrollView>
+    <ThemedScrollView accessibilityRole={Platform.OS === 'android' ? undefined : 'main'}>
       <ThemedView style={styles.container}>
         <ThemedText themeColor="green" type="subtitle">Portfolio</ThemedText>
         <ThemedText themeColor="textSecondary">

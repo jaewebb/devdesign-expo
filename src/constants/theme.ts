@@ -31,9 +31,14 @@ export const Colors = {
 export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
 
 export const Fonts = Platform.select({
+  android: {
+    display: 'Oxanium_400Regular',
+    sans: 'OpenSans_400Regular',
+  },
   ios: {
+    display: 'Oxanium-Regular',
     /** iOS `UIFontDescriptorSystemDesignDefault` */
-    sans: 'system-ui',
+    sans: 'OpenSans-Regular',
     /** iOS `UIFontDescriptorSystemDesignSerif` */
     serif: 'ui-serif',
     /** iOS `UIFontDescriptorSystemDesignRounded` */
@@ -48,7 +53,8 @@ export const Fonts = Platform.select({
     mono: 'monospace',
   },
   web: {
-    sans: 'var(--font-display)',
+    display: 'var(--font-display)',
+    sans: 'var(--font-sans)',
     serif: 'var(--font-serif)',
     rounded: 'var(--font-rounded)',
     mono: 'var(--font-mono)',

@@ -10,8 +10,9 @@ export type ThemedTextProps = TextProps & {
 
 export function ThemedText({ style, type = 'default', themeColor, ...rest }: ThemedTextProps) {
   const theme = useTheme();
-
-  return <Text style={[{ color: theme[themeColor ?? 'text'] }, styles[type], style]} {...rest} />;
+  const fontFam = type === "title" || type ==="subtitle" ? Fonts.display : Fonts.sans;
+  
+  return <Text style={[{ color: theme[themeColor ?? 'text'], fontFamily: fontFam }, styles[type], style]} {...rest} />;
 }
 
 const styles = StyleSheet.create({

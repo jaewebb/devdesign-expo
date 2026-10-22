@@ -1,17 +1,27 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 import { Image } from 'expo-image';
+import type { Metadata } from 'expo-router/server';
+
 import { ThemedScrollView } from '@/components/themed-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+
 import { MaxContentWidth, Spacing } from '@/constants/theme';
+
+export function generateMetadata(): Metadata {
+  return {
+    title: 'Home',
+    description: 'Contains a bio about Jae Webb.',
+  };
+}
 
 export default function HomeScreen() {
   return (
-    <ThemedScrollView>
+    <ThemedScrollView accessibilityRole={Platform.OS === 'android' ? undefined : 'main'}>
       <ThemedView style={styles.container}>
         <ThemedView style={styles.containerBio}>
-          <Image style={styles.avatar} source={require('@/assets/images/avatar.png')} />
+          <Image style={styles.avatar} source={require('@/assets/images/avatar.png')} accessibilityLabel="Photo of Jae Webb" />
           <ThemedView style={styles.containerTitle}>
             <ThemedText themeColor="green" type="title">
               Jae Webb

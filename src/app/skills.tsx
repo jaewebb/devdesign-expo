@@ -1,11 +1,20 @@
 import { useEffect, useState } from 'react';
-
 import { Platform, StyleSheet } from 'react-native';
+
+import type { Metadata } from 'expo-router/server';
 
 import { ThemedScrollView } from '@/components/themed-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+
 import { MaxContentWidth, Spacing } from '@/constants/theme';
+
+export function generateMetadata(): Metadata {
+  return {
+    title: 'Skills',
+    description: 'A list of my skills.',
+  };
+}
 
 export interface Skill {
   id: number
@@ -66,7 +75,7 @@ export default function Skills() {
 
   if (isLoadingSkills || isLoadingSkillTypes)
     return (
-      <ThemedScrollView>
+      <ThemedScrollView accessibilityRole={Platform.OS === 'android' ? undefined : 'main'}>
         <ThemedView style={styles.container}>
           <ThemedText themeColor="green">Loading...</ThemedText>
         </ThemedView>
@@ -75,7 +84,7 @@ export default function Skills() {
 
   if (error)
     return (
-      <ThemedScrollView>
+      <ThemedScrollView accessibilityRole={Platform.OS === 'android' ? undefined : 'main'}>
         <ThemedView style={styles.container}>
           <ThemedText themeColor="green">{ error }</ThemedText>
         </ThemedView>
@@ -83,7 +92,7 @@ export default function Skills() {
     )
 
   return (
-    <ThemedScrollView>
+    <ThemedScrollView accessibilityRole={Platform.OS === 'android' ? undefined : 'main'}>
       <ThemedView style={styles.container}>
         {skillTypes.map((skillType) => (
           <ThemedView
@@ -97,7 +106,7 @@ export default function Skills() {
             {skills.filter(s => s.typeId == skillType.id).map((skill) => (
               <ThemedText key={`skill-${skill.id}`}>{skill.name}</ThemedText>
             ))}
-            <ThemedText themeColor={skillType.id % 2 == 0 ? "blue" : "green"} type="small">
+            <ThemedText style={{ paddingTop: Spacing.two }} themeColor={skillType.id % 2 == 0 ? "blue" : "green"} type="small">
               {skillType.description}
             </ThemedText>
           </ThemedView>
