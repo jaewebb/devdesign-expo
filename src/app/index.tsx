@@ -1,8 +1,11 @@
+import { useEffect, useState } from 'react';
 import { Platform, StyleSheet } from 'react-native';
 
 import { Image } from 'expo-image';
 import type { Metadata } from 'expo-router/server';
 
+import { Error } from '@/components/error';
+import { Loading } from '@/components/loading';
 import { ThemedScrollView } from '@/components/themed-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -16,39 +19,66 @@ export function generateMetadata(): Metadata {
   };
 }
 
+export interface Bio {
+  avatar: {
+    alt: string;
+    url: string;
+  }
+  description: string[];
+  firstName: string;
+  goals: string[];
+  lastName: string;
+  title: string;
+}
+
 export default function HomeScreen() {
+  const [bio, setBio] = useState({} as Bio);
+  const [error, setError] = useState('');
+  const [isLoadingBio, setIsLoadingBio] = useState(false);
+
+  const BASE_URL = Platform.select({
+    android: process.env.EXPO_PUBLIC_BASE_URL_ANDROID,
+    ios: process.env.EXPO_PUBLIC_BASE_URL_IOS,
+    default: process.env.EXPO_PUBLIC_BASE_URL_WEB,
+  });
+
+  useEffect(() => {
+    setIsLoadingBio(true);
+    fetch(`${BASE_URL}/bio/bio`)
+      .then(response => response.json())
+      .then(data => {
+        setError('');
+        setBio(data);
+        setIsLoadingBio(false)
+      })
+      .catch(error => {
+        setError(`Error fetching data: ${error}`);
+        setIsLoadingBio(false);
+        setBio({} as Bio);
+      });
+  }, []);
+
+  if (isLoadingBio) return <Loading />
+  
+  if (error) return <Error errorMsg={error} />
+
+  const uri = `https://${process.env.EXPO_PUBLIC_BLOB_STORE_ID}.public.blob.vercel-storage.com/${bio?.avatar?.url}`
+
   return (
     <ThemedScrollView accessibilityRole={Platform.OS === 'android' ? undefined : 'main'}>
       <ThemedView style={styles.container}>
         <ThemedView style={styles.containerBio}>
-          <Image style={styles.avatar} source={require('@/assets/images/avatar.png')} accessibilityLabel="Photo of Jae Webb" />
+          <Image style={styles.avatar} source={{ uri }} accessibilityLabel={bio?.avatar?.alt} />
           <ThemedView style={styles.containerTitle}>
             <ThemedText themeColor="green" type="title">
-              Jae Webb
+              {bio?.firstName} {bio?.lastName}
             </ThemedText>
             <ThemedText themeColor="blue" type="subtitle">
-              Senior Web Developer
+              {bio?.title}
             </ThemedText>
           </ThemedView>
         </ThemedView>
-        <ThemedText>
-          I'm a software developer with over a decade of experience building modern, user-focused web applications.
-          I specialize in front-end development, with expertise in React, Vue.js, TypeScript, and JavaScript, and a passion for creating polished, accessible, and intuitive digital experiences.
-        </ThemedText>
-        <ThemedText>
-          Throughout my career, I've had the opportunity to work on a variety of projects, from financial planning tools and interactive proposal generators to responsive web applications and reusable design systems.
-          I've worked with talented teams at organizations like RBC and CapIntel, where I've contributed to high-impact projects, and earned recognition for my work.
-        </ThemedText>
-        <ThemedText>
-          I care about the details that make great software: clean, maintainable code, thoughtful user experiences, accessibility, and consistency across devices.
-          I'm also a strong believer in continuous learning, whether that means exploring new technologies, refining my skills, or finding better ways to solve problems.
-          I enjoy collaborating with designers and developers, sharing knowledge, and helping turn ideas into reliable, well-crafted products.
-        </ThemedText>
-        <ThemedText>
-          Outside of development, I enjoy hockey, fitness, gaming, 3D modeling, digital art, and music.
-          My creative interests influence how I approach software development, combining technical problem-solving with an appreciation for design, visual detail, and creativity.
-          I'm always looking for opportunities to build meaningful things, learn something new, and contribute to projects that make a difference. 
-        </ThemedText>
+        {bio?.description?.map((paragraph, i) => <ThemedText key={`paragraph-${i}`}>{paragraph}</ThemedText>)}
       </ThemedView>
     </ThemedScrollView>
   );

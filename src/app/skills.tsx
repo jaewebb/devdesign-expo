@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, Pressable, StyleSheet } from 'react-native';
 
+import type { ExternalPathString } from 'expo-router';
 import type { Metadata } from 'expo-router/server';
 
+import { Error } from '@/components/error';
+import { ExternalLink } from '@/components/external-link';
+import { Loading } from '@/components/loading';
 import { ThemedScrollView } from '@/components/themed-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -17,16 +21,16 @@ export function generateMetadata(): Metadata {
 }
 
 export interface Skill {
-  id: number
-  link: string
-  name: string
-  typeId: number
+  id: number;
+  link: ExternalPathString;
+  name: string;
+  typeId: number;
 }
 
 export interface SkillType {
-  description: string
-  id: number
-  title: string
+  description: string;
+  id: number;
+  title: string;
 }
 
 export default function Skills() {
@@ -73,28 +77,14 @@ export default function Skills() {
       });
   }, []);
 
-  if (isLoadingSkills || isLoadingSkillTypes)
-    return (
-      <ThemedScrollView accessibilityRole={Platform.OS === 'android' ? undefined : 'main'}>
-        <ThemedView style={styles.container}>
-          <ThemedText themeColor="green">Loading...</ThemedText>
-        </ThemedView>
-      </ThemedScrollView>
-    )
+  if (isLoadingSkills || isLoadingSkillTypes) return <Loading />
 
-  if (error)
-    return (
-      <ThemedScrollView accessibilityRole={Platform.OS === 'android' ? undefined : 'main'}>
-        <ThemedView style={styles.container}>
-          <ThemedText themeColor="green">{ error }</ThemedText>
-        </ThemedView>
-      </ThemedScrollView>
-    )
+  if (error) return <Error errorMsg={error} />
 
   return (
     <ThemedScrollView accessibilityRole={Platform.OS === 'android' ? undefined : 'main'}>
       <ThemedView style={styles.container}>
-        {skillTypes.map((skillType) => (
+        {skillTypes && skillTypes.map((skillType) => (
           <ThemedView
             key={`skillType-${skillType.id}`}
             style={ styles.containerSkills }
@@ -103,8 +93,16 @@ export default function Skills() {
             <ThemedText themeColor={skillType.id % 2 == 0 ? "blue" : "green"} type="subtitle">
               {skillType.title}
             </ThemedText>
-            {skills.filter(s => s.typeId == skillType.id).map((skill) => (
-              <ThemedText key={`skill-${skill.id}`}>{skill.name}</ThemedText>
+            {skills && skills.filter(s => s.typeId == skillType.id).map((skill) => (
+              skill.link ? (
+                <ExternalLink key={`skill-${skillType.id}-${skill.id}`} href={skill.link} asChild>
+                  <Pressable style={({ pressed }) => pressed && styles.pressed}>
+                    <ThemedText type="link">{skill.name}</ThemedText>
+                  </Pressable>
+                </ExternalLink>
+                ) : (
+                <ThemedText key={`skill-${skill.id}`}>{skill.name}</ThemedText>
+              )
             ))}
             <ThemedText style={{ paddingTop: Spacing.two }} themeColor={skillType.id % 2 == 0 ? "blue" : "green"} type="small">
               {skillType.description}
@@ -132,6 +130,9 @@ const styles = StyleSheet.create({
     marginTop: Spacing.four,
     paddingHorizontal: Spacing.five,
     paddingVertical: Spacing.three,
+  },
+  pressed: {
+    opacity: 0.7,
   },
   scrollView: {
     flex: 1,
